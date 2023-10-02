@@ -13,7 +13,13 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { last } = useData();
+  // const { last } = useData();
+  const { data } = useData();
+  let last = null;
+  if (data && data.events) {
+    last = data.events[data.events.length - 1];
+  }
+  // Recup useData et utilise data.events ce qui donne le dernier événement
   return (
     <>
       <header>
