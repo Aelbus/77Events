@@ -13,13 +13,7 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  // const { last } = useData();
-  const { data } = useData();
-  let last = null;
-  if (data && data.events) {
-    last = data.events[data.events.length - 1];
-  }
-  // Recup useData et utilise data.events ce qui donne le dernier événement
+  const { lastEvent } = useData();
   return (
     <>
       <header>
@@ -30,7 +24,9 @@ const Page = () => {
           <Slider />
         </section>
         <section className="ServicesContainer">
-          <h2 className="Title">Nos services</h2>
+          <h2 id="nos-services" className="Title">
+            Nos services
+          </h2>
           <p>Nous organisons des événements sur mesure partout dans le monde</p>
           <div className="ListContainer">
             <ServiceCard imageSrc="/images/priscilla-du-preez-Q7wGvnbuwj0-unsplash1.png">
@@ -59,13 +55,17 @@ const Page = () => {
           </div>
         </section>
         <section className="EventsContainer">
-          <h2 className="Title">Nos réalisations</h2>
+          <h2 id="nos-realisations" className="Title">
+            Nos réalisations
+          </h2>
           <EventList />
         </section>
         <section className="PeoplesContainer">
-          <h2 className="Title">Notre équipe</h2>
+          <h2 id="notre-equipe" className="Title">
+            Notre équipe
+          </h2>
           <p>Une équipe d’experts dédiés à l’ogranisation de vos événements</p>
-          <div className="ListContainer">
+          <div data-testid="peopleList" className="ListContainer">
             <PeopleCard
               imageSrc="/images/stephanie-liverani-Zz5LQe-VSMY-unsplash.png"
               name="Samira"
@@ -117,17 +117,19 @@ const Page = () => {
           </Modal>
         </div>
       </main>
-      <footer className="row">
-        <div className="col presta">
+      <footer data-testid="footer-testid" className="row">
+        <div className="col presta" data-testid="last-event">
           <h3>Notre derniére prestation</h3>
-          <EventCard
-            imageSrc={last?.cover}
-            title={last?.title}
-            imageAlt={last?.description}
-            date={new Date(last?.date)}
-            small
-            label="boom"
-          />
+          {}
+          {lastEvent && lastEvent.cover && lastEvent.title ? (
+            <EventCard
+              imageSrc={lastEvent.cover}
+              title={lastEvent.title}
+              date={new Date(lastEvent.date)}
+              small
+              label="boom"
+            />
+          ) : null}
         </div>
         <div className="col contact">
           <h3>Contactez-nous</h3>

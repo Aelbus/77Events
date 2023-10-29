@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { useData } from "../../contexts/DataContext";
 import { getMonth } from "../../helpers/Date";
 
@@ -7,26 +7,27 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
-  const byDateDesc = data?.focus.sort(
-    (evtA, evtB) =>
-      // DEL : new Date(evtA.date) > new Date(evtB.date) ? -1 : 1
-      new Date(evtA.date) - new Date(evtB.date) // MOD : Soustraction date
+  const byDateDesc = data?.focus.sort((evtA, evtB) =>
+    new Date(evtA.date) > new Date(evtB.date) ? -1 : 1
   );
+
   const nextCard = () => {
-    setTimeout(
-      () => setIndex(index + 1 < byDateDesc.length ? index + 1 : 0), // ADD : +1 à L'index (verif si l'index surpasse la longueur des events et verif si liste vide)
-      5000
-    );
+    if (byDateDesc) {
+      setTimeout(
+        () => setIndex(index < byDateDesc.length - 1 ? index + 1 : 0),
+        5000
+      );
+    }
   };
+
   useEffect(() => {
     nextCard();
   });
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
+        <Fragment key={event.title}>
           <div
-            key={event.title}
             className={`SlideCard SlideCard--${
               index === idx ? "display" : "hide"
             }`}
@@ -42,20 +43,18 @@ const Slider = () => {
           </div>
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
-              {byDateDesc.map((e, radioIdx) => (
+              {byDateDesc.map((_, radioIdx) => (
                 <input
-                  // key={`${event.id}`}
-                  key={e.title} // MOD
+                  key={_.date}
                   type="radio"
                   name="radio-button"
                   checked={index === radioIdx}
-                  onChange={() => this}
-                  // Point Pagination : utilisation de l'index de l'event display, verif (radioIdx)
+                  readOnly
                 />
               ))}
             </div>
           </div>
-        </>
+        </Fragment>
       ))}
     </div>
   );
